@@ -213,10 +213,7 @@ function PaymentInfoMsg({ time }) {
           <div>Con estos datos podrás realizarnos el pago:</div>
           <div className="space-y-1.5 pt-1">
             <div>Referencia/ Concepto: <strong>BRG-7XK29Q4L</strong></div>
-            <div
-              className="text-xs font-semibold px-2 py-1.5 rounded"
-              style={{ backgroundColor: '#2A3942', color: '#FFB020' }}
-            >
+            <div className="text-xs font-semibold">
               ⚠️ Es fundamental incluir la Referencia para identificar tu pago
             </div>
             <div>Número de ruta: <strong>101206101</strong></div>
@@ -429,7 +426,7 @@ export default function App() {
       { id: uid(), type: 'user', text: c, time: now() },
       {
         id: uid(), type: 'bot',
-        text: `¿Cuánto quieres enviar? 🇲🇽\nEl tipo de cambio es **$${rate} pesos** por dólar.\n\nPuedes elegir una opción o escribir el monto que prefieras 🤜`,
+        text: `¿Cuánto quieres enviar? 🇲🇽\nEl tipo de cambio es **$${rate} pesos** por dólar.\n\nEscribe el monto que prefieras ✍️`,
         placeholder: 'Ejemplo: $100 dólares o $1,747 pesos',
         time: now(),
       },
@@ -449,7 +446,7 @@ export default function App() {
       { id: uid(), type: 'bot', text: `Tu beneficiario recibirá **$${mxn} pesos mexicanos**`, time: now() },
       {
         id: uid(), type: 'bot',
-        text: '¿A quién le quieres enviar dinero? 🧑\nEscribe el nombre de usuario de la persona como aparece en su aplicación.',
+        text: '¿A quién le quieres enviar dinero? 🙋\nEscribe el usuario de la persona como aparece en su aplicación.',
         placeholder: 'Ejemplo: Juan Pérez López',
         time: now(),
       },
@@ -536,7 +533,7 @@ export default function App() {
         { id: uid(), type: 'user', text: '💵 Cambiar el monto', time: now() },
         {
           id: uid(), type: 'bot',
-          text: `¿Cuánto quieres enviar? 🇲🇽\nEl tipo de cambio es **$${RATES[country]} pesos** por dólar.\n\nPuedes elegir una opción o escribir el monto que prefieras 🤜`,
+          text: `¿Cuánto quieres enviar? 🇲🇽\nEl tipo de cambio es **$${RATES[country]} pesos** por dólar.\n\nEscribe el monto que prefieras ✍️`,
           placeholder: 'Ejemplo: $100 dólares',
           time: now(),
         },
@@ -549,7 +546,7 @@ export default function App() {
         { id: uid(), type: 'user', text: '👤 Cambiar el destinatario', time: now() },
         {
           id: uid(), type: 'bot',
-          text: '¿A quién le quieres enviar dinero? 🧑\nEscribe el nombre de usuario de la persona como aparece en su aplicación.',
+          text: '¿A quién le quieres enviar dinero? 🙋\nEscribe el usuario de la persona como aparece en su aplicación.',
           placeholder: 'Ejemplo: Juan Pérez López',
           time: now(),
         },
