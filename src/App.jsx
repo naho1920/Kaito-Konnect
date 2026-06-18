@@ -14,18 +14,38 @@ const COUNTRIES = [
   'El Salvador 🇸🇻',
   'Nicaragua 🇳🇮',
   'Perú 🇵🇪',
+  'España 🇪🇸',
 ]
 
+// Tasas de cambio: moneda local → MXN
 const RATES = {
-  'Ecuador 🇪🇨':      17.47,
-  'Colombia 🇨🇴':      17.43,
-  'Guatemala 🇬🇹':     17.51,
-  'Honduras 🇭🇳':      17.39,
-  'Rep. Dominicana 🇩🇴': 17.52,
-  'El Salvador 🇸🇻':   17.47,
-  'Nicaragua 🇳🇮':     17.38,
-  'Perú 🇵🇪':          17.44,
+  'Ecuador 🇪🇨':         17.50,   // USD → MXN
+  'Colombia 🇨🇴':         0.0042,  // COP → MXN
+  'Guatemala 🇬🇹':        2.25,    // GTQ → MXN
+  'Honduras 🇭🇳':         0.71,    // HNL → MXN
+  'Rep. Dominicana 🇩🇴':  0.30,    // DOP → MXN
+  'El Salvador 🇸🇻':      17.50,   // USD → MXN
+  'Nicaragua 🇳🇮':        0.48,    // NIO → MXN
+  'Perú 🇵🇪':             4.65,    // PEN → MXN
+  'España 🇪🇸':           19.00,   // EUR → MXN
 }
+
+const CURRENCIES = {
+  'Ecuador 🇪🇨':         { code: 'USD', singular: 'dólar',            plural: 'dólares',           },
+  'Colombia 🇨🇴':         { code: 'COP', singular: 'peso colombiano',   plural: 'pesos colombianos', },
+  'Guatemala 🇬🇹':        { code: 'GTQ', singular: 'quetzal',           plural: 'quetzales',         },
+  'Honduras 🇭🇳':         { code: 'HNL', singular: 'lempira',           plural: 'lempiras',          },
+  'Rep. Dominicana 🇩🇴':  { code: 'DOP', singular: 'peso dominicano',   plural: 'pesos dominicanos', },
+  'El Salvador 🇸🇻':      { code: 'USD', singular: 'dólar',            plural: 'dólares',           },
+  'Nicaragua 🇳🇮':        { code: 'NIO', singular: 'córdoba',           plural: 'córdobas',          },
+  'Perú 🇵🇪':             { code: 'PEN', singular: 'sol',               plural: 'soles',             },
+  'España 🇪🇸':           { code: 'EUR', singular: 'euro',              plural: 'euros',             },
+}
+
+const getCurrency = (c) => CURRENCIES[c] ?? { code: 'USD', singular: 'dólar', plural: 'dólares' }
+
+// Formatea la tasa: 4 decimales si < 0.01, 2 si no
+const fmtRate = (r) => Number(r).toFixed(r < 0.01 ? 4 : 2)
 
 // ─────────────────────────────────────────────
 // Helpers
@@ -160,21 +180,21 @@ function SummaryMsg({ msg, isActive, onConfirm, onChange }) {
           <div className="px-3 py-3 text-sm space-y-3" style={{ color: '#E9EDEF' }}>
             <div>
               <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: '#8696A0' }}>📄 RESUMEN</div>
-              <div>Monto a enviar: <strong>{msg.amount} USD</strong></div>
+              <div>Monto a enviar: <strong>{msg.amount} {msg.currency?.code ?? 'USD'}</strong></div>
               <div>Equivalente a: <strong>${msg.mxnAmount} pesos mexicanos</strong></div>
             </div>
             <div>
               <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: '#8696A0' }}>🏦 DESTINO</div>
               <div>A: <strong>{msg.recipient}</strong></div>
-              <div>En: <strong>Mexico 🇲🇽</strong></div>
+              <div>En: <strong>México 🇲🇽</strong></div>
             </div>
             <div>
               <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: '#8696A0' }}>🌎 TARIFAS</div>
-              <div>Comisión: <strong>$0 dólares</strong></div>
+              <div>Comisión: <strong>$0 {msg.currency?.plural ?? 'dólares'}</strong></div>
             </div>
             <div>
               <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: '#8696A0' }}>💰 TOTAL A PAGAR</div>
-              <div className="font-bold">${msg.amount} + $0 = ${msg.amount}</div>
+              <div className="font-bold">{msg.amount} {msg.currency?.code ?? 'USD'} + $0 = {msg.amount} {msg.currency?.code ?? 'USD'}</div>
             </div>
             <div className="text-[10px] text-right" style={{ color: '#8696A0' }}>{msg.time}</div>
           </div>
@@ -217,7 +237,7 @@ function PaymentInfoMsg({ time }) {
               ⚠️ Es fundamental incluir la Referencia para identificar tu pago
             </div>
             <div>Número de ruta: <strong>101206101</strong></div>
-            <div>Nombre: <strong>Bridge FBO John Rivera</strong></div>
+            <div>Nombre: <strong>Kaito Networks</strong></div>
             <div>Cuenta número: <strong>215268120000</strong></div>
             <div>Nombre del banco: <strong>Lead Bank</strong></div>
           </div>
@@ -408,7 +428,7 @@ export default function App() {
         { id: uid(), type: 'bot', text: 'Hola, comencemos con tu envío 😃', time: now() },
         {
           id: uid(), type: 'bot',
-          text: 'Para poder comenzar necesitamos saber desde que país enviarás tu dinero 🌍',
+          text: 'Para poder comenzar necesitamos saber desde qué país enviarás tu dinero 🌍',
           time: now(),
           ctaLabel: '≡  Opciones',
           ctaAction: 'open_countries',
@@ -426,8 +446,8 @@ export default function App() {
       { id: uid(), type: 'user', text: c, time: now() },
       {
         id: uid(), type: 'bot',
-        text: `¿Cuánto quieres enviar? 🇲🇽\nEl tipo de cambio es **$${rate} pesos** por dólar.\n\nEscribe el monto que prefieras ✍️`,
-        placeholder: 'Ejemplo: $100 dólares o $1,747 pesos',
+        text: `¿Cuánto quieres enviar? 🇲🇽\nEl tipo de cambio es **$${fmtRate(rate)} pesos** por ${getCurrency(c).singular}.\n\nEscribe el monto que prefieras ✍️`,
+        placeholder: `Ejemplo: $100 ${getCurrency(c).plural} o $1,747 pesos`,
         time: now(),
       },
     ])
@@ -442,7 +462,7 @@ export default function App() {
     setAmount(usd)
     const mxn = toMXN(usd, country)
     push([
-      { id: uid(), type: 'user', text: `$${usd} dólares`, time: now() },
+      { id: uid(), type: 'user', text: `$${usd} ${getCurrency(country).plural}`, time: now() },
       { id: uid(), type: 'bot', text: `Tu beneficiario recibirá **$${mxn} pesos mexicanos**`, time: now() },
       {
         id: uid(), type: 'bot',
@@ -468,6 +488,7 @@ export default function App() {
       {
         id: uid(), type: 'summary',
         amount, mxnAmount: mxn, recipient: trimmed,
+        currency: getCurrency(country),
         active: true, time: now(),
       },
     ])
@@ -483,7 +504,7 @@ export default function App() {
       { id: uid(), type: 'user', text: 'Sí, correcto 👍', time: now() },
       {
         id: uid(), type: 'bot',
-        text: `Para continuar estamos esperando un mensaje de confirmación de **"${r}"**, para proceder a generarte la solicitud de envio.\nEsto puede tardar de **5 a 15 minutos**.`,
+        text: `Para continuar estamos esperando un mensaje de confirmación de **"${r}"**, para proceder a generarte la solicitud de envío.\nEsto puede tardar de **5 a 15 minutos**.`,
         time: now(),
       },
     ])
@@ -533,8 +554,8 @@ export default function App() {
         { id: uid(), type: 'user', text: '💵 Cambiar el monto', time: now() },
         {
           id: uid(), type: 'bot',
-          text: `¿Cuánto quieres enviar? 🇲🇽\nEl tipo de cambio es **$${RATES[country]} pesos** por dólar.\n\nEscribe el monto que prefieras ✍️`,
-          placeholder: 'Ejemplo: $100 dólares',
+          text: `¿Cuánto quieres enviar? 🇲🇽\nEl tipo de cambio es **$${fmtRate(RATES[country])} pesos** por ${getCurrency(country).singular}.\n\nEscribe el monto que prefieras ✍️`,
+          placeholder: `Ejemplo: $100 ${getCurrency(country).plural}`,
           time: now(),
         },
       ])
@@ -629,7 +650,7 @@ export default function App() {
 
   const placeholder =
     inputMode === 'greeting'  ? 'Escribe "Hola" para comenzar...' :
-    inputMode === 'amount'    ? 'Ej: $100 dólares' :
+    inputMode === 'amount'    ? `Ej: $100 ${getCurrency(country).plural}` :
     inputMode === 'recipient' ? 'Nombre del destinatario...' :
     'Escribe un mensaje'
 
