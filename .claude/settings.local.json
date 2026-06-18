@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"C:\\\\Users\\\\naomi\\\\Downloads\\\\Kaito Konnect\")",
+      "mcp__figma-console__figma_get_file_data",
+      "mcp__figma-console__figma_take_screenshot",
+      "mcp__figma-console__figma_get_status",
+      "mcp__figma-console__figma_capture_screenshot",
+      "mcp__figma-console__figma_execute"
+    ]
+  }
+}
