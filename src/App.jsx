@@ -466,7 +466,7 @@ export default function App() {
       { id: uid(), type: 'bot', text: `Tu beneficiario recibirá **$${mxn} pesos mexicanos**`, time: now() },
       {
         id: uid(), type: 'bot',
-        text: '¿A quién le quieres enviar dinero? 🙋\nEscribe el usuario de la persona como aparece en su aplicación.',
+        text: '¡Excelente! Ya estamos listos para enviar dinero  ¿A quién quieres enviar? Coloca el usuario del destinatario',
         placeholder: 'Ejemplo: Juan Pérez López',
         time: now(),
       },
@@ -567,7 +567,7 @@ export default function App() {
         { id: uid(), type: 'user', text: '👤 Cambiar el destinatario', time: now() },
         {
           id: uid(), type: 'bot',
-          text: '¿A quién le quieres enviar dinero? 🙋\nEscribe el usuario de la persona como aparece en su aplicación.',
+          text: '¡Excelente! Ya estamos listos para enviar dinero  ¿A quién quieres enviar? Coloca el usuario del destinatario',
           placeholder: 'Ejemplo: Juan Pérez López',
           time: now(),
         },
